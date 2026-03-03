@@ -1,0 +1,32 @@
+# 認証情報
+credentials.json
+**/client_secret_*.json
+**/*-key-*.json
+.env
+.env.local
+.env.*.local
+
+# 依存関係
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ビルド成果物
+.next/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code
+.claude/worktrees/
