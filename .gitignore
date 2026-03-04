@@ -30,3 +30,8 @@ Thumbs.db
 
 # Claude Code
 .claude/worktrees/
+
+# Limitless AI ログ（個人的な会話内容は除外）
+.limitless/raw-logs/
+.limitless/processed/
+# .limitless/philosophy-extract/ は必要に応じてコミット可

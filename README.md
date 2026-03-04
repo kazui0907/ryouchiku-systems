@@ -11,6 +11,8 @@
   - `nk-service/` - 将来拡張用
 - `private/` - プライベートプロジェクト
 - `docs/` - ドキュメント
+- `.limitless/` - Limitless AI ログと思想抽出システム
+- `scripts/philosophy-updater/` - 経営思想自動抽出スクリプト
 
 ## セットアップ
 
@@ -29,3 +31,32 @@ https://drive.google.com/drive/folders/0ALObQKP4ll2vUk9PVA
 - **Google Drive**: スプレッドシート、PDF資料、画像アセット
 
 MCPを使用してGoogle Driveにアクセスします。
+
+## 💭 経営思想の自動抽出
+
+Limitless AI で記録した日常の会話から、経営理念・事業方針を自動抽出してCLAUDE.mdに反映します。
+
+### 使用方法
+
+1. **ログファイルの配置**
+   ```bash
+   # Limitless AIのログを配置
+   cp ~/Downloads/limitless-export-*.txt .limitless/raw-logs/
+   ```
+
+2. **思想の抽出（手動）**
+   ```bash
+   cd scripts/philosophy-updater
+   pip install -r requirements.txt
+   cp .env.example .env
+   # .envにGemini APIキーを設定（推奨・コスパ優秀）
+   # または Claude APIキー（高品質）
+   python extract_philosophy.py
+   ```
+
+3. **自動監視（推奨）**
+   ```bash
+   python auto_watch.py
+   ```
+
+詳細は `.limitless/README.md` と `scripts/philosophy-updater/README.md` を参照してください。

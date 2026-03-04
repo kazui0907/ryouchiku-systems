@@ -1,0 +1,31 @@
+# プロジェクトメモリ
+
+**現在の状態:** MCP OAuth設定完了、Claude Code再起動待ち
+
+---
+
+## セーブポイント一覧
+
+| 日付 | ファイル | 概要 |
+|------|----------|------|
+| 2026-03-05 | [savepoint_20260305.md](./savepoint_20260305.md) | MCP OAuth設定完了、再起動待ち |
+
+---
+
+## クイックリファレンス
+
+### 重要なID
+- **共有ドライブ:** `0ADq9RVl_-pI7Uk9PVA`
+- **営業CRM:** `1ziKikGgjVmDS4BlUfMGQH2rfqGN03I1_Tb5gC1HcZBw`
+- **フェーズ管理:** `1uxXJdrAaXNkK134gX4WPcVwtz3pgk5Rxc4rRfLwvhsg`
+
+### MCPサーバー
+- `google-drive`: `npx @piotr-agier/google-drive-mcp`（共有ドライブ対応）
+- `n8n`: `npx -y n8n-mcp`
+
+### 次のアクション
+1. Claude Code再起動（MCP設定を有効化）
+2. OAuth認証を完了（ブラウザでGoogleログイン）
+3. 共有ドライブアクセス確認
+4. フェーズ管理シートを共有ドライブに移動
+5. Index.htmlをGASにデプロイ
