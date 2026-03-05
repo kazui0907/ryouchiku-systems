@@ -218,7 +218,7 @@ export default function Dashboard() {
               </p>
             </div>
             {/* 月選択 */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <div className="flex items-center gap-2">
                 <label htmlFor="year-select" className="text-sm font-medium text-gray-700">
                   年:
@@ -258,7 +258,7 @@ export default function Dashboard() {
                   setSelectedYear(currentDate.getFullYear());
                   setSelectedMonth(currentDate.getMonth() + 1);
                 }}
-                className="px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md hover:bg-blue-50"
+                className="px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md hover:bg-blue-50 whitespace-nowrap"
               >
                 今月に戻る
               </button>
