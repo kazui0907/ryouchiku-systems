@@ -104,6 +104,7 @@ ryouchiku-systems/（このリポジトリ）
 │   │   ├── homepage-it/（Webサイト）
 │   │   ├── lts-internal/（LTS自社プロジェクト）
 │   │   ├── nk-service/（NKサービス）
+│   │   ├── gws-cli/（Google Workspace CLI ツール - Rust製）
 │   │   └── clients/（クライアント別プロジェクト）
 │   │
 │   ├── life-art/（ライフアート株式会社）

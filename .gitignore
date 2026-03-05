@@ -17,6 +17,12 @@ venv/
 .next/
 dist/
 build/
+target/
+*.rs.bk
+lcov.info
+bin/
+coverage/
+*.log
 
 # OS
 .DS_Store
