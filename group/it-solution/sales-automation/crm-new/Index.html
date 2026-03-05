@@ -53,6 +53,23 @@
   .btn-send { background: #1a73e8; color: #fff; }
   .btn-send:hover { background: #1565c0; }
 
+  /* AI生成ボタン */
+  .btn-generate {
+    background: linear-gradient(135deg, #7b1fa2, #512da8);
+    color: #fff;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-generate:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(123,31,162,0.35); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
   /* Bulk bar */
   .bulk-bar {
     background: #fff3e0;
@@ -111,6 +128,15 @@
   .td-subject { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #555; }
   .td-status { white-space: nowrap; }
   .td-actions { white-space: nowrap; }
+  .episode-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #7b1fa2;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    title: 'エピソードメモあり';
+  }
 
   .status-badge {
     display: inline-block;
@@ -207,8 +233,106 @@
     border-radius: 8px;
     border: 1px solid #eee;
     white-space: pre-wrap;
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
+  }
+
+  /* ===================== */
+  /* エピソードセクション   */
+  /* ===================== */
+  .episode-section {
+    background: linear-gradient(135deg, #fdf4ff, #f3e5f5);
+    border: 1.5px solid #e1bee7;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .episode-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .episode-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #6a1b9a;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .episode-section-hint {
+    font-size: 12px;
+    color: #ab47bc;
+  }
+  .episode-textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 10px 14px;
+    border: 1.5px solid #ce93d8;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.7;
+    resize: vertical;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .episode-textarea:focus {
+    outline: none;
+    border-color: #7b1fa2;
+    box-shadow: 0 0 0 3px rgba(123,31,162,0.1);
+  }
+  .episode-textarea::placeholder { color: #bbb; font-size: 13px; }
+  .episode-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  /* AI生成中インジケーター */
+  .generating-indicator {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    color: #7b1fa2;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: auto;
+  }
+  .generating-indicator.show { display: flex; }
+  .dot-spinner { display: flex; gap: 4px; }
+  .dot-spinner span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #7b1fa2;
+    animation: dotBounce 1.2s infinite;
+  }
+  .dot-spinner span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-spinner span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-7px); opacity: 1; }
+  }
+
+  /* 生成済みバナー */
+  .generated-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #2e7d32;
+    font-weight: 500;
   }
 
   .card-footer {
@@ -282,8 +406,20 @@
   }
   .form-group input:focus,
   .form-group textarea:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
-  .form-group textarea { min-height: 350px; line-height: 1.7; resize: vertical; }
+  .form-group textarea { min-height: 380px; line-height: 1.7; resize: vertical; }
   .modal-footer { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 8px; }
+  .modal-ai-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3e5f5;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #7b1fa2;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
 
   /* Confirm dialog */
   .confirm-overlay {
@@ -325,10 +461,12 @@
     opacity: 0;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 360px;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast-success { background: #4caf50; }
   .toast-error { background: #e53935; }
+  .toast-info { background: #7b1fa2; }
 
   /* Search */
   .search-box {
@@ -354,6 +492,8 @@
     .td-subject { max-width: 150px; }
     .search-box { width: 120px; }
     .search-box:focus { width: 160px; }
+    .episode-actions { justify-content: stretch; }
+    .btn-generate { width: 100%; text-align: center; }
   }
 </style>
 </head>
@@ -442,6 +582,7 @@
   <div class="card" id="cardContent"></div>
 </div>
 
+<!-- メール編集モーダル -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
     <div class="modal-header">
@@ -449,6 +590,9 @@
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
+      <div id="aiBadge" class="modal-ai-badge" style="display:none;">
+        AIが生成したメール文章です。内容を確認・編集してから保存してください。
+      </div>
       <div class="form-group">
         <label>件名</label>
         <input type="text" id="editSubject">
@@ -465,6 +609,7 @@
   </div>
 </div>
 
+<!-- 送信確認ダイアログ -->
 <div class="confirm-overlay" id="confirmDialog">
   <div class="confirm-box">
     <h3>メール送信確認</h3>
@@ -488,23 +633,12 @@
   var editingRow = null;
   var selectedRows = {};
   var pendingSendIndex = null;
+  var isAiGenerated = false;
 
   var AI_SEMINAR_PHASES = [
-    '1:リード',
-    '2:初回接触済',
-    '3:商談調整中',
-    '4:検討中',
-    '5:受注確定',
-    '6:書類待ち',
-    '7:申請完了',
-    '8:入金待ち',
-    '9:研修準備中',
-    '10:EIT研修中',
-    '11:LIT研修中',
-    '12:IIT研修①',
-    '13:IIT研修②',
-    '14:IIT研修③',
-    '15:フォローアップ'
+    '1:リード','2:初回接触済','3:商談調整中','4:検討中','5:受注確定',
+    '6:書類待ち','7:申請完了','8:入金待ち','9:研修準備中','10:EIT研修中',
+    '11:LIT研修中','12:IIT研修①','13:IIT研修②','14:IIT研修③','15:フォローアップ'
   ];
 
   window.addEventListener('load', function() {
@@ -530,11 +664,7 @@
     currentFilter = f;
     var btns = document.querySelectorAll('.btn-filter');
     for (var i = 0; i < btns.length; i++) {
-      if (btns[i].getAttribute('data-filter') === f) {
-        btns[i].classList.add('active');
-      } else {
-        btns[i].classList.remove('active');
-      }
+      btns[i].classList.toggle('active', btns[i].getAttribute('data-filter') === f);
     }
     applyFilters();
   }
@@ -546,7 +676,6 @@
     for (var i = 0; i < allCustomers.length; i++) {
       var c = allCustomers[i];
       if (currentFilter !== 'all' && c.status !== currentFilter) continue;
-      // フェーズフィルター
       if (currentPhaseFilter !== 'all') {
         if (currentPhaseFilter === 'none') {
           if (c.aiSeminarPhase && c.aiSeminarPhase !== '') continue;
@@ -556,7 +685,7 @@
         }
       }
       if (q) {
-        var text = (c.company + ' ' + c.name + ' ' + c.subject + ' ' + c.department).toLowerCase();
+        var text = (c.company + ' ' + c.name + ' ' + c.subject + ' ' + c.department + ' ' + (c.episode || '')).toLowerCase();
         if (text.indexOf(q) === -1) continue;
       }
       filtered.push(c);
@@ -596,31 +725,28 @@
       var c = filtered[i];
       var globalIdx = -1;
       for (var j = 0; j < allCustomers.length; j++) {
-        if (allCustomers[j].row === c.row) {
-          globalIdx = j;
-          break;
-        }
+        if (allCustomers[j].row === c.row) { globalIdx = j; break; }
       }
       var statusClass = getStatusClass(c.status);
       var statusLabel = c.status || '下書き済';
       var checked = selectedRows[c.row] ? 'checked' : '';
       var isSent = c.status === '送信済み';
-      var editBtn = isSent ? '<span style="font-size:12px;color:#999;">送信済み</span>' : '<button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="openEdit(' + i + ')">編集</button> <button class="btn btn-send" style="font-size:12px;padding:4px 10px;" onclick="openSendConfirm(' + i + ')">送信</button>';
+      var editBtn = isSent
+        ? '<span style="font-size:12px;color:#999;">送信済み</span>'
+        : '<button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" onclick="openEdit(' + i + ')">編集</button> <button class="btn btn-send" style="font-size:12px;padding:4px 10px;" onclick="openSendConfirm(' + i + ')">送信</button>';
 
-      var phaseDisplay = c.aiSeminarPhase || '';
-      var phaseBadgeClass = phaseDisplay ? 'phase-badge' : 'phase-badge no-phase';
-      var phaseLabel = phaseDisplay || '未設定';
+      var episodeDot = c.episode ? '<span class="episode-dot" title="エピソードメモあり"></span>' : '';
 
       html += '<tr onclick="openCard(' + i + ')">';
       html += '<td class="check-col" onclick="event.stopPropagation()"><input type="checkbox" ' + checked + ' ' + (isSent ? 'disabled' : '') + ' onchange="toggleSelect(' + c.row + ', this)"></td>';
       html += '<td class="td-num">' + (globalIdx + 1) + '</td>';
-      html += '<td class="td-company">' + htmlEscape(c.company) + '</td>';
+      html += '<td class="td-company">' + episodeDot + htmlEscape(c.company) + '</td>';
       html += '<td class="td-name">' + htmlEscape(c.name) + '</td>';
       html += '<td onclick="event.stopPropagation()"><select class="phase-select" onchange="updatePhase(' + c.row + ', this.value)">';
       html += '<option value="">未設定</option>';
       for (var p = 0; p < AI_SEMINAR_PHASES.length; p++) {
-        var selected = (c.aiSeminarPhase === AI_SEMINAR_PHASES[p]) ? 'selected' : '';
-        html += '<option value="' + AI_SEMINAR_PHASES[p] + '" ' + selected + '>' + AI_SEMINAR_PHASES[p] + '</option>';
+        var sel = (c.aiSeminarPhase === AI_SEMINAR_PHASES[p]) ? 'selected' : '';
+        html += '<option value="' + AI_SEMINAR_PHASES[p] + '" ' + sel + '>' + AI_SEMINAR_PHASES[p] + '</option>';
       }
       html += '</select></td>';
       html += '<td class="td-subject">' + htmlEscape(c.subject) + '</td>';
@@ -646,46 +772,92 @@
     var statusLabel = c.status || '下書き済';
     var globalIdx = -1;
     for (var j = 0; j < allCustomers.length; j++) {
-      if (allCustomers[j].row === c.row) {
-        globalIdx = j + 1;
-        break;
-      }
+      if (allCustomers[j].row === c.row) { globalIdx = j + 1; break; }
     }
     var isSent = c.status === '送信済み';
 
+    // フッターボタン
     var footerBtn = '';
     if (isSent) {
       footerBtn = '<span style="font-size:15px;color:#1565c0;font-weight:500;">送信完了</span>';
     } else {
-      footerBtn = '<div style="display:flex;gap:8px;"><button class="btn btn-secondary" style="padding:12px 24px;font-size:15px;" onclick="openEdit(' + cardIndex + ')">編集</button><button class="btn-send-lg" onclick="openSendConfirm(' + cardIndex + ')">送信</button></div>';
+      footerBtn = '<div style="display:flex;gap:8px;">'
+        + '<button class="btn btn-secondary" style="padding:12px 24px;font-size:15px;" onclick="openEdit(' + cardIndex + ')">編集</button>'
+        + '<button class="btn-send-lg" onclick="openSendConfirm(' + cardIndex + ')">送信</button>'
+        + '</div>';
     }
 
-    var html = '<div class="card-header">';
+    var html = '';
+
+    // ─── カードヘッダー ───
+    html += '<div class="card-header">';
     html += '<div class="card-company">' + htmlEscape(c.company) + '</div>';
     html += '<div class="card-meta">';
     if (c.department) html += '<span>' + htmlEscape(c.department) + '</span>';
     if (c.title) html += '<span>' + htmlEscape(c.title) + '</span>';
     html += '<span>' + htmlEscape(c.name) + ' 様</span>';
-    html += '<span>→ ' + htmlEscape(c.email) + '</span>';
+    html += '<span style="color:#1a73e8;">→ ' + htmlEscape(c.email) + '</span>';
     html += '</div>';
     if (c.service) html += '<div class="card-service"><span class="badge">推奨: ' + htmlEscape(c.service) + '</span></div>';
-    // フェーズ表示
+    // フェーズ選択
     html += '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">';
     html += '<span style="font-size:13px;color:#666;">AIセミナーフェーズ:</span>';
     html += '<select class="phase-select" id="cardPhaseSelect" onchange="updatePhase(' + c.row + ', this.value)">';
     html += '<option value="">未設定</option>';
     for (var p = 0; p < AI_SEMINAR_PHASES.length; p++) {
-      var selected = (c.aiSeminarPhase === AI_SEMINAR_PHASES[p]) ? 'selected' : '';
-      html += '<option value="' + AI_SEMINAR_PHASES[p] + '" ' + selected + '>' + AI_SEMINAR_PHASES[p] + '</option>';
+      var sel = (c.aiSeminarPhase === AI_SEMINAR_PHASES[p]) ? 'selected' : '';
+      html += '<option value="' + AI_SEMINAR_PHASES[p] + '" ' + sel + '>' + AI_SEMINAR_PHASES[p] + '</option>';
     }
     html += '</select></div>';
-    html += '</div>';
+    html += '</div>'; // card-header end
+
+    // ─── カードボディ ───
     html += '<div class="card-body">';
-    html += '<div class="card-section"><div class="card-section-header"><span class="card-section-title">件名</span></div><div class="card-subject">' + htmlEscape(c.subject) + '</div></div>';
-    html += '<div class="card-section"><div class="card-section-header"><span class="card-section-title">本文</span></div><div class="card-email-body">' + htmlEscape(c.body) + '</div></div>';
+
+    // ── エピソードメモセクション ──
+    html += '<div class="episode-section">';
+    html += '<div class="episode-section-header">';
+    html += '<span class="episode-section-title">出会いのエピソードメモ</span>';
+    html += '<span class="episode-section-hint">AIメール生成でパーソナライズに使用されます</span>';
     html += '</div>';
+    html += '<textarea class="episode-textarea" id="episodeMemoText" '
+      + 'placeholder="名刺交換した状況・会話の内容・印象・共通の話題など&#10;例: ○○展示会で隣になり、製造業DXについて意見交換。社員のITスキル不足に悩んでいると話されていた。コーヒーを飲みながら1時間ほど意気投合した。">'
+      + htmlEscape(c.episode || '')
+      + '</textarea>';
+    html += '<div class="episode-actions">';
+    html += '<div class="generating-indicator" id="generatingIndicator">';
+    html += '<div class="dot-spinner"><span></span><span></span><span></span></div>';
+    html += '<span>AIがメール文章を生成中...</span>';
+    html += '</div>';
+    html += '<button class="btn btn-secondary" style="font-size:13px;" onclick="saveMemoFromCard(' + c.row + ')">メモを保存</button>';
+    html += '<button class="btn btn-generate" id="btnGenerate" onclick="generateEmailFromCard(' + c.row + ')">AIでメール生成</button>';
+    html += '</div>';
+    html += '</div>'; // episode-section end
+
+    // ── メール内容（生成済みの場合のみ表示） ──
+    if (c.subject || c.body) {
+      html += '<div class="card-section">';
+      html += '<div class="card-section-header"><span class="card-section-title">件名</span></div>';
+      html += '<div class="card-subject">' + htmlEscape(c.subject || '（未生成）') + '</div>';
+      html += '</div>';
+      html += '<div class="card-section">';
+      html += '<div class="card-section-header"><span class="card-section-title">本文</span></div>';
+      html += '<div class="card-email-body">' + htmlEscape(c.body || '（未生成）') + '</div>';
+      html += '</div>';
+    } else {
+      html += '<div style="text-align:center;padding:24px 0;color:#bbb;font-size:14px;">';
+      html += '上のエピソードメモを入力して「AIでメール生成」ボタンを押してください';
+      html += '</div>';
+    }
+
+    html += '</div>'; // card-body end
+
+    // ─── カードフッター ───
     html += '<div class="card-footer">';
-    html += '<div class="card-status-area"><span class="status-badge ' + statusClass + '">' + htmlEscape(statusLabel) + '</span><span style="font-size:13px;color:#999;">#' + globalIdx + '</span></div>';
+    html += '<div class="card-status-area">';
+    html += '<span class="status-badge ' + statusClass + '">' + htmlEscape(statusLabel) + '</span>';
+    html += '<span style="font-size:13px;color:#999;">#' + globalIdx + '</span>';
+    html += '</div>';
     html += footerBtn;
     html += '</div>';
 
@@ -695,23 +867,102 @@
     document.getElementById('btnNext').disabled = cardIndex >= filtered.length - 1;
   }
 
+  // ==========================================
+  // エピソードメモ保存
+  // ==========================================
+  function saveMemoFromCard(row) {
+    var memoEl = document.getElementById('episodeMemoText');
+    if (!memoEl) return;
+    var memo = memoEl.value;
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        for (var i = 0; i < allCustomers.length; i++) {
+          if (allCustomers[i].row === row) {
+            allCustomers[i].episode = memo;
+            break;
+          }
+        }
+        showToast('エピソードメモを保存しました', 'success');
+      })
+      .withFailureHandler(function(err) {
+        showToast('保存エラー: ' + err.message, 'error');
+      })
+      .saveMemo(row, memo);
+  }
+
+  // ==========================================
+  // AI メール生成
+  // ==========================================
+  function generateEmailFromCard(row) {
+    var memoEl = document.getElementById('episodeMemoText');
+    var memo = memoEl ? memoEl.value : '';
+    var btn = document.getElementById('btnGenerate');
+    var indicator = document.getElementById('generatingIndicator');
+
+    if (!memo.trim()) {
+      showToast('エピソードメモを入力するとよりパーソナライズされます', 'info');
+    }
+
+    btn.disabled = true;
+    btn.style.display = 'none';
+    indicator.classList.add('show');
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        indicator.classList.remove('show');
+        btn.disabled = false;
+        btn.style.display = '';
+
+        if (res.success) {
+          // ローカルデータ更新
+          for (var i = 0; i < allCustomers.length; i++) {
+            if (allCustomers[i].row === row) {
+              allCustomers[i].subject = res.subject;
+              allCustomers[i].body = res.body;
+              allCustomers[i].status = '下書き済';
+              allCustomers[i].episode = memo;
+              break;
+            }
+          }
+          // カードを再描画
+          renderCard();
+          // 編集モーダルをAI生成フラグ付きで開く
+          isAiGenerated = true;
+          editingRow = row;
+          document.getElementById('aiBadge').style.display = 'flex';
+          document.getElementById('modalTitle').textContent = htmlEscape(res.company || '') + ' 様 - AI生成メール';
+          document.getElementById('editSubject').value = res.subject;
+          document.getElementById('editBody').value = res.body;
+          document.getElementById('editModal').classList.add('show');
+          showToast('メール文章を生成しました。内容を確認してください。', 'success');
+        } else {
+          showToast('生成エラー: ' + res.message, 'error');
+        }
+      })
+      .withFailureHandler(function(err) {
+        indicator.classList.remove('show');
+        btn.disabled = false;
+        btn.style.display = '';
+        showToast('エラー: ' + err.message, 'error');
+      })
+      .generateEmailDraft(row, memo);
+  }
+
+  // ==========================================
+  // カードナビゲーション
+  // ==========================================
   function openCard(i) {
     cardIndex = i;
     setView('card');
   }
 
   function prevCard() {
-    if (cardIndex > 0) {
-      cardIndex--;
-      renderCard();
-    }
+    if (cardIndex > 0) { cardIndex--; renderCard(); }
   }
 
   function nextCard() {
-    if (cardIndex < filtered.length - 1) {
-      cardIndex++;
-      renderCard();
-    }
+    if (cardIndex < filtered.length - 1) { cardIndex++; renderCard(); }
   }
 
   document.addEventListener('keydown', function(e) {
@@ -722,9 +973,14 @@
     }
   });
 
+  // ==========================================
+  // メール編集モーダル
+  // ==========================================
   function openEdit(i) {
     var c = filtered[i];
+    isAiGenerated = false;
     editingRow = c.row;
+    document.getElementById('aiBadge').style.display = 'none';
     document.getElementById('modalTitle').textContent = htmlEscape(c.company) + ' - ' + htmlEscape(c.name) + ' 様';
     document.getElementById('editSubject').value = c.subject || '';
     document.getElementById('editBody').value = c.body || '';
@@ -733,7 +989,9 @@
 
   function closeModal() {
     document.getElementById('editModal').classList.remove('show');
+    document.getElementById('aiBadge').style.display = 'none';
     editingRow = null;
+    isAiGenerated = false;
   }
 
   function saveEmail() {
@@ -750,11 +1008,13 @@
           if (allCustomers[i].row === row) {
             allCustomers[i].subject = subject;
             allCustomers[i].body = body;
+            allCustomers[i].status = '下書き済';
             break;
           }
         }
         closeModal();
         renderCurrentView();
+        updateProgress();
         showToast(res.message, 'success');
         btn.disabled = false;
         btn.textContent = '保存';
@@ -767,6 +1027,9 @@
       .updateEmail(row, subject, body);
   }
 
+  // ==========================================
+  // 送信確認・送信
+  // ==========================================
   function openSendConfirm(i) {
     var c = filtered[i];
     pendingSendIndex = i;
@@ -816,21 +1079,19 @@
       .sendEmail(c.row);
   }
 
+  // ==========================================
+  // 一括選択・一括送信
+  // ==========================================
   function toggleSelect(row, el) {
-    if (el.checked) {
-      selectedRows[row] = true;
-    } else {
-      delete selectedRows[row];
-    }
+    if (el.checked) selectedRows[row] = true;
+    else delete selectedRows[row];
     updateBulkBar();
   }
 
   function toggleAll(el) {
     if (el.checked) {
       for (var i = 0; i < filtered.length; i++) {
-        if (filtered[i].status !== '送信済み') {
-          selectedRows[filtered[i].row] = true;
-        }
+        if (filtered[i].status !== '送信済み') selectedRows[filtered[i].row] = true;
       }
     } else {
       selectedRows = {};
@@ -845,22 +1106,15 @@
   }
 
   function updateBulkBar() {
-    var keys = Object.keys(selectedRows);
-    var count = keys.length;
+    var count = Object.keys(selectedRows).length;
     var bar = document.getElementById('bulkBar');
-    if (count > 0) {
-      bar.classList.add('show');
-      document.getElementById('bulkCount').textContent = count + '件選択中';
-    } else {
-      bar.classList.remove('show');
-    }
+    bar.classList.toggle('show', count > 0);
+    document.getElementById('bulkCount').textContent = count + '件選択中';
   }
 
   function bulkSendSelected() {
     var rows = [];
-    for (var key in selectedRows) {
-      rows.push(Number(key));
-    }
+    for (var key in selectedRows) rows.push(Number(key));
     if (rows.length === 0) return;
     if (!confirm(rows.length + '件のメールを一括送信しますか？')) return;
 
@@ -868,10 +1122,7 @@
       .withSuccessHandler(function(res) {
         for (var r = 0; r < rows.length; r++) {
           for (var i = 0; i < allCustomers.length; i++) {
-            if (allCustomers[i].row === rows[r]) {
-              allCustomers[i].status = '送信済み';
-              break;
-            }
+            if (allCustomers[i].row === rows[r]) { allCustomers[i].status = '送信済み'; break; }
           }
         }
         selectedRows = {};
@@ -886,40 +1137,31 @@
       .bulkSend(rows);
   }
 
+  // ==========================================
+  // 進捗バー
+  // ==========================================
   function updateProgress() {
     var total = allCustomers.length;
-    var sent = 0;
-    var draft = 0;
+    var sent = 0, draft = 0;
     for (var i = 0; i < allCustomers.length; i++) {
       if (allCustomers[i].status === '送信済み') sent++;
       else draft++;
     }
     var pct = total > 0 ? Math.round(sent / total * 100) : 0;
     document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressText').textContent = '送信済: ' + sent + ' / ' + total + '件 (' + pct + '%)  |  未送信: ' + draft + '件';
+    document.getElementById('progressText').textContent =
+      '送信済: ' + sent + ' / ' + total + '件 (' + pct + '%)  |  未送信: ' + draft + '件';
   }
 
-  function htmlEscape(s) {
-    if (!s) return '';
-    var div = document.createElement('div');
-    div.textContent = String(s);
-    return div.innerHTML;
-  }
-
-  function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast toast-' + type + ' show';
-    setTimeout(function() { t.classList.remove('show'); }, 3000);
-  }
-
-  function updatePhase(customerId, newPhase) {
+  // ==========================================
+  // フェーズ更新
+  // ==========================================
+  function updatePhase(row, newPhase) {
     google.script.run
       .withSuccessHandler(function(res) {
         if (res.success) {
-          // ローカルデータを更新
           for (var i = 0; i < allCustomers.length; i++) {
-            if (allCustomers[i].row === customerId) {
+            if (allCustomers[i].row === row) {
               allCustomers[i].aiSeminarPhase = newPhase;
               break;
             }
@@ -932,7 +1174,24 @@
       .withFailureHandler(function(err) {
         showToast('エラー: ' + err.message, 'error');
       })
-      .updatePhase(customerId, 'aiSeminar', newPhase);
+      .updatePhase(row, 'aiSeminar', newPhase);
+  }
+
+  // ==========================================
+  // ユーティリティ
+  // ==========================================
+  function htmlEscape(s) {
+    if (!s) return '';
+    var div = document.createElement('div');
+    div.textContent = String(s);
+    return div.innerHTML;
+  }
+
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast toast-' + (type || 'success') + ' show';
+    setTimeout(function() { t.classList.remove('show'); }, 3500);
   }
 </script>
 </body>
